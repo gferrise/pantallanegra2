@@ -16,13 +16,18 @@ import android.view.WindowManager;
  * - Mantiene la pantalla encendida para que NDI no se pause por bloqueo.
  * - Absorbe los toques (evita tocar NDI sin querer).
  * - Doble toque sobre la capa = quitarla (alternativa al botón lateral).
- * Sin servicio ni procesos en segundo plano: cero consumo cuando está apagada.
+ * La capa no usa servicio propio; el monitor (MonitorService) es independiente.
  */
 final class Overlay {
 
     private static View view;
 
     private Overlay() {}
+
+    /** Si la capa negra está visible (se informa en el campo pantalla_negra). */
+    static boolean visible() {
+        return view != null;
+    }
 
     static void toggle(Context ctx) {
         if (view != null) hide(ctx); else show(ctx);

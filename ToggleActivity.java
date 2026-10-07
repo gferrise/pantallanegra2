@@ -16,6 +16,7 @@ public class ToggleActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Atajos.publicar(this);
 
         if (!Settings.canDrawOverlays(this)) {
             Toast.makeText(this,

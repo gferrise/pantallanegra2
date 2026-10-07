@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Capa negra -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Monitor: envío al sitio, señal Wi-Fi (sin ubicación), servicio y notificación fija -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:label="Pantalla negra"
@@ -22,5 +30,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Atajo "Monitor on/off": prende o apaga el monitor y se cierra. -->
+        <activity
+            android:name=".MonitorToggleActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:launchMode="singleInstance" />
+
+        <!-- Atajo "Configurar monitor" -->
+        <activity
+            android:name=".ConfigActivity"
+            android:exported="true"
+            android:label="Monitor"
+            android:theme="@android:style/Theme.DeviceDefault"
+            android:windowSoftInputMode="adjustResize" />
+
+        <service
+            android:name=".MonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Envía batería, temperatura y Wi-Fi del teléfono al panel del livestream" />
+        </service>
     </application>
 </manifest>
