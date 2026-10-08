@@ -8,8 +8,10 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 /**
- * Se abre con el doble toque del botón lateral (o tocando el ícono).
- * No dibuja nada: alterna la capa negra y se cierra.
+ * Se abre tocando el ícono. No dibuja nada: activa el modo pantalla negra
+ * (monitor + recuadro flotante) y se cierra.
+ *  - Doble toque en el recuadro: capa negra.
+ *  - Mantener el recuadro 5 s: apaga monitor y recuadro.
  */
 public class ToggleActivity extends Activity {
 
@@ -26,8 +28,17 @@ public class ToggleActivity extends Activity {
                     Uri.parse("package:" + getPackageName()));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
+        } else if (MonitorService.activo()) {
+            Burbuja.mostrar(this); // por si no estaba visible
+            Toast.makeText(this, "Ya está activo. Doble toque en el recuadro = pantalla negra",
+                    Toast.LENGTH_SHORT).show();
         } else {
-            Overlay.toggle(getApplicationContext());
+            MonitorService.iniciar(this);
+            String problema = Config.problema(this);
+            Toast.makeText(this, problema == null
+                            ? "Monitor activo. Doble toque en el recuadro = pantalla negra"
+                            : "Recuadro activo, pero el monitor no envía: " + problema,
+                    Toast.LENGTH_LONG).show();
         }
 
         finish();

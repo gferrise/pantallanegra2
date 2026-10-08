@@ -41,6 +41,8 @@ import java.util.Locale;
  * se reinicia. Un envío que falla se descarta: nunca se reintenta.
  *
  * Todo corre en un único hilo propio; el hilo principal queda libre para la capa negra.
+ * Mientras el servicio está activo se muestra el recuadro flotante (Burbuja); al
+ * detenerlo se quitan el recuadro y la capa negra.
  */
 public class MonitorService extends Service {
 
@@ -148,6 +150,7 @@ public class MonitorService extends Service {
         servidor = new ServidorLocal(getApplicationContext());
         servidor.iniciar();
 
+        Burbuja.mostrar(this);
         Config.log(this, "Monitor iniciado");
         h.post(() -> pedir("inicio"));
     }
@@ -155,6 +158,8 @@ public class MonitorService extends Service {
     @Override
     public void onDestroy() {
         activo = false;
+        Overlay.hide(getApplicationContext());
+        Burbuja.quitar(this);
         if (h != null) h.removeCallbacksAndMessages(null);
         try {
             unregisterReceiver(receptor);

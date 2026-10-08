@@ -15,8 +15,8 @@ import android.view.WindowManager;
  * - Brillo forzado al mínimo mientras está visible.
  * - Mantiene la pantalla encendida para que NDI no se pause por bloqueo.
  * - Absorbe los toques (evita tocar NDI sin querer).
- * - Doble toque sobre la capa = quitarla (alternativa al botón lateral).
- * La capa no usa servicio propio; el monitor (MonitorService) es independiente.
+ * - Doble toque sobre la capa = quitarla; vuelve el recuadro flotante (Burbuja).
+ * Se activa con doble toque en el recuadro, que existe mientras el monitor está activo.
  */
 final class Overlay {
 
@@ -70,6 +70,7 @@ final class Overlay {
 
         wm.addView(v, lp);
         view = v;
+        Burbuja.quitar(ctx);
     }
 
     static void hide(Context ctx) {
@@ -81,5 +82,6 @@ final class Overlay {
             // ya no estaba adjunta
         }
         view = null;
+        if (MonitorService.activo()) Burbuja.mostrar(ctx);
     }
 }
